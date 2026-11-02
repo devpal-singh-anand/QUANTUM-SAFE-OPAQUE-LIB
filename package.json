@@ -7,11 +7,13 @@
   "types": "dist/src/index.d.ts",
   "scripts": {
     "build": "tsc",
+    "build:native": "node-gyp rebuild",
     "test": "vitest run"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "gypfile": false,
   "dependencies": {
     "@oqs/liboqs-js": "^0.15.1",
     "node-addon-api": "^8.9.2"
