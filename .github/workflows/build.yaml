@@ -38,7 +38,12 @@ jobs:
       - name: Build libOTe
         run: |
           cd native/libOTe
-          python3 build.py --boost --all --install=./install -DENABLE_RELIC=OFF -DENABLE_OPENSSL=ON -DCMAKE_CXX_STANDARD=20
+          # First run to fetch all deps including macoro
+          python3 build.py --boost --all --install=./install -DENABLE_RELIC=OFF -DENABLE_OPENSSL=ON || true
+          # Patch macoro - add missing <utility> header
+          find . -name "thread_pool.h" | xargs sed -i 's/#pragma once/#pragma once\n#include <utility>/' 2>/dev/null || true
+          # Second run - now with patched macoro
+          python3 build.py --boost --all --install=./install -DENABLE_RELIC=OFF -DENABLE_OPENSSL=ON
 
       - name: Clone LEAP
         run: |
