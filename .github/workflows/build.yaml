@@ -38,7 +38,7 @@ jobs:
       - name: Build libOTe
         run: |
           cd native/libOTe
-          python3 build.py --boost --all --install=./install -DENABLE_RELIC=OFF -DENABLE_OPENSSL=ON
+          python3 build.py --boost --all --install=./install -DENABLE_RELIC=OFF -DENABLE_OPENSSL=ON -DCMAKE_CXX_STANDARD=20
 
       - name: Clone LEAP
         run: |
