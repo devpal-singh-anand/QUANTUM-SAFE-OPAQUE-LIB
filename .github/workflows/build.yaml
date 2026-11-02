@@ -23,7 +23,7 @@ jobs:
           sudo apt-get install -y cmake build-essential python3 libssl-dev
 
       - name: Install npm deps
-        run: npm install
+        run: npm install --ignore-scripts
 
       - name: Clone libOTe v2.2.0
         run: |
@@ -52,7 +52,7 @@ jobs:
           make -j$(nproc)
 
       - name: Build native addon
-        run: npx node-gyp build
+        run: npm run build:native
 
       - name: Copy .node to output dir
         run: |
