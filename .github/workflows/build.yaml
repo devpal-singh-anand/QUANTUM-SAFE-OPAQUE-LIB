@@ -66,3 +66,9 @@ jobs:
         run: npx vitest run
 
       - name: Commit built .node
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add native/linux-x64/qh_opaque.node
+          git diff --cached --quiet || git commit -m "ci: built linux-x64 .node [skip ci]"
+          git push
