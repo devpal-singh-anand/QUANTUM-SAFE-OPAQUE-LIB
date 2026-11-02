@@ -1,0 +1,28 @@
+{
+  "name": "qh-opaque",
+  "version": "0.1.0",
+  "description": "",
+  "type": "module",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@oqs/liboqs-js": "^0.15.1",
+    "node-addon-api": "^8.9.2"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  },
+  "files": [
+    "dist/",
+    "native/"
+  ]
+}
