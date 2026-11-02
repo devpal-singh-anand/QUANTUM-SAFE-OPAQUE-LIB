@@ -33,7 +33,7 @@ jobs:
         run: |
           mkdir -p native/libOTe/out
           cd native/libOTe/out
-          wget -q https://archives.boost.io/release/1.84.0/source/boost_1_84_0.tar.gz
+          wget -q https://archives.boost.io/release/1.84.0/source/boost_1_84_0.tar.bz2
 
       - name: Build libOTe
         run: |
