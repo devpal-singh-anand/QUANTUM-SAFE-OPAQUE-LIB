@@ -1,0 +1,71 @@
+name: Build Native Addon
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install system deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential python3 libssl-dev
+
+      - name: Install npm deps
+        run: npm install
+
+      - name: Clone libOTe v2.2.0
+        run: |
+          git clone --branch v2.2.0 --depth 1 https://github.com/osu-crypto/libOTe.git native/libOTe
+
+      - name: Download Boost manually
+        run: |
+          mkdir -p native/libOTe/out
+          cd native/libOTe/out
+          wget -q https://archives.boost.io/release/1.84.0/source/boost_1_84_0.tar.gz
+
+      - name: Build libOTe
+        run: |
+          cd native/libOTe
+          python3 build.py --boost --relic --all
+
+      - name: Clone LEAP
+        run: |
+          git clone --depth 1 https://github.com/meyira/leap.git native/leap
+
+      - name: Build LEAP
+        run: |
+          cd native/leap
+          mkdir -p build && cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          make -j$(nproc)
+
+      - name: Build native addon
+        run: npx node-gyp build
+
+      - name: Copy .node to output dir
+        run: |
+          mkdir -p native/linux-x64
+          cp build/Release/qh_opaque.node native/linux-x64/qh_opaque.node
+
+      - name: Run tests
+        run: npx vitest run
+
+      - name: Commit built .node
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add native/linux-x64/qh_opaque.node
+          git diff --cached --quiet || git commit -m "ci: built linux-x64 .node [skip ci]"
+          git push
